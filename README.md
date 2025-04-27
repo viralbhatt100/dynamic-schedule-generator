@@ -6,27 +6,36 @@
 
 ---
 
-# Dynamic Multi-Analyst Scheduling Script
-
-## About the Project
-This project is designed to **quickly generate a dynamic application testing schedule** based on user inputs.  
-It is **especially useful for Managers or Coordinators** who frequently need to **provide clients a clear view** about the **project Start Date, End Date, and Report timelines**.
-
-Developed by: **Viral Bhatt**
+![Project Banner](banner.png)
 
 ---
 
-## Features
-- 🚀 User-driven Inputs (Start Date, Number of Analysts, Applications, Man-Days)
-- 📅 Automatically skips Weekends (Saturday/Sunday) and Custom Holidays
-- 🔄 Flexible for any number of analysts and applications
-- 📝 Outputs a clean, professional Excel file with scheduling details
-- 🛠 Lightweight and easy to run without any complex setup
+## 📋 About the Project
+
+This project is specially designed to help **Managers or Coordinators** who frequently need to provide clients with a clear understanding of:
+- 📅 Project Start Date
+- 📅 Project End Date
+- 📄 Proposed Report Date
+
+It dynamically generates a full application testing schedule by taking user input.
+
+Developed by **Viral Bhatt**.
 
 ---
 
-## How to Use
-1. Install Python 3 if not already installed.
+## ✨ Features
+
+- 🔹 User-driven Inputs (Start Date, Analysts, Applications, Man-Days)
+- 🔹 Skips Weekends and Custom Holidays
+- 🔹 Flexible for any project structure
+- 🔹 Outputs a clean professional Excel file
+- 🔹 Saves time and avoids manual calculation errors
+
+---
+
+## ⚙️ How to Install
+
+1. Install Python 3.8+ on your machine.
 2. Install required libraries:
    ```bash
    pip3 install pandas openpyxl
