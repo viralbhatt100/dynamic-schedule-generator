@@ -6,7 +6,8 @@
 
 ---
 
-![Project Banner](banner.png)
+![Project Banner](![Image Apr 27, 2025, 12_44_48 PM](https://github.com/user-attachments/assets/fc03acdb-15f3-4acc-938d-6c36617f71fa)
+)
 
 ---
 
