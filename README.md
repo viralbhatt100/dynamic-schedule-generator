@@ -1,5 +1,13 @@
 # Dynamic Multi-Analyst Scheduling Script
 
+![Python Version](https://img.shields.io/badge/Python-3.8%2B-blue)
+![Last Commit](https://img.shields.io/github/last-commit/viralbhatt100/dynamic-schedule-generator)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+---
+
+# Dynamic Multi-Analyst Scheduling Script
+
 ## About the Project
 This project is designed to **quickly generate a dynamic application testing schedule** based on user inputs.  
 It is **especially useful for Managers or Coordinators** who frequently need to **provide clients a clear view** about the **project Start Date, End Date, and Report timelines**.
