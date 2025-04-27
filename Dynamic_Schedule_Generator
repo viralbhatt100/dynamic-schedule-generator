@@ -1,0 +1,116 @@
+# ============================================================
+# Project: Dynamic Multi-Analyst Scheduling Script
+# Author: Viral Bhatt
+# Created On: April 28, 2025
+# Purpose: Generate dynamic application testing schedule for projects
+#          Specially designed to help Managers or Coordinators who frequently
+#          need to give clients an idea about project Start Date and End Date quickly.
+# Features: User input driven, multi-analyst support, holiday/weekend handling
+# ============================================================
+
+from datetime import datetime, timedelta
+import pandas as pd
+from heapq import heappop, heappush
+
+# === Helper Functions ===
+
+def next_working_day(date, skip_saturday, skip_sunday, holidays):
+    date += timedelta(days=1)
+    while ((skip_saturday and date.weekday() == 5) or 
+           (skip_sunday and date.weekday() == 6) or 
+           (date in holidays)):
+        date += timedelta(days=1)
+    return date
+
+
+def calculate_end_and_report_dates(start_date, man_days, skip_saturday, skip_sunday, holidays):
+    current_date = start_date
+    working_days = 0.0
+    end_date = None
+    report_date = None
+
+    while working_days < man_days:
+        if ((not skip_saturday or current_date.weekday() != 5) and
+            (not skip_sunday or current_date.weekday() != 6) and
+            (current_date not in holidays)):
+            working_days += 1.0
+            if working_days >= man_days - 1 and end_date is None:
+                end_date = current_date
+            if working_days >= man_days:
+                report_date = current_date
+                break
+        current_date += timedelta(days=1)
+
+    return end_date, report_date
+
+
+def assign_schedule(start_date, man_days_list, analysts, skip_saturday, skip_sunday, holidays):
+    analyst_heap = [(start_date, i) for i in range(analysts)]
+    schedule = []
+
+    for idx, days in enumerate(man_days_list, 1):
+        available_date, analyst_id = heappop(analyst_heap)
+        while ((skip_saturday and available_date.weekday() == 5) or 
+               (skip_sunday and available_date.weekday() == 6) or
+               (available_date in holidays)):
+            available_date = next_working_day(available_date, skip_saturday, skip_sunday, holidays)
+
+        end_date, report_date = calculate_end_and_report_dates(available_date, days, skip_saturday, skip_sunday, holidays)
+
+        schedule.append([
+            idx,
+            days,
+            available_date.strftime("%b %d, %Y"),
+            end_date.strftime("%b %d, %Y"),
+            report_date.strftime("%b %d, %Y"),
+            analyst_id
+        ])
+
+        next_available = report_date + timedelta(days=1)
+        while ((skip_saturday and next_available.weekday() == 5) or 
+               (skip_sunday and next_available.weekday() == 6) or
+               (next_available in holidays)):
+            next_available = next_working_day(next_available, skip_saturday, skip_sunday, holidays)
+
+        heappush(analyst_heap, (next_available, analyst_id))
+
+    return schedule
+
+
+# === Main Script ===
+
+print("\n🛠 Dynamic Multi-Analyst Scheduling Script\n")
+
+# User Inputs
+start_date_input = input("Enter project Start Date (YYYY-MM-DD): ")
+start_date = datetime.strptime(start_date_input, "%Y-%m-%d")
+
+analysts = int(input("Enter number of Analysts: "))
+applications = int(input("Enter number of Applications to Test: "))
+
+man_days_list = []
+for i in range(applications):
+    days = float(input(f"Enter Man Days for Application {i+1}: "))
+    man_days_list.append(days)
+
+skip_saturday = input("Skip Saturdays? (y/n): ").lower() == 'y'
+skip_sunday = input("Skip Sundays? (y/n): ").lower() == 'y'
+
+holidays_input = input("Enter Special Holidays (comma-separated YYYY-MM-DD) or press Enter for none: ")
+if holidays_input.strip():
+    holidays = [datetime.strptime(date.strip(), "%Y-%m-%d") for date in holidays_input.split(",")]
+else:
+    holidays = []
+
+# Generate Schedule
+schedule = assign_schedule(start_date, man_days_list, analysts, skip_saturday, skip_sunday, holidays)
+
+# Create DataFrame
+columns = ["Application No.", "Man Days", "Proposed Start Date", "Proposed End Date", "Proposed Report Date", "Analyst ID"]
+df = pd.DataFrame(schedule, columns=columns)
+
+# Save to Excel
+output_file = 'Dynamic_Schedule_Output.xlsx'
+df.to_excel(output_file, sheet_name='Schedule', index=False)
+
+print(f"\n✅ Schedule successfully generated and saved as '{output_file}'!")
